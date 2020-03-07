@@ -18,6 +18,10 @@ class Piece:
             self._row == other._row
         )
 
+    def get_color(self):
+        """
+        """
+        return self._color
 
     def valid_move(self, dest_column, dest_row, board):
         """
@@ -28,7 +32,12 @@ class Piece:
         if dest_row > 10 or dest_row < 1:
             return False
 
-        if ord(dest_column) > 105 or ord(dest_column) < 97:
+        if dest_column > 'i' or dest_column < 'a':
+            return False
+
+        piece_at_destination = board[dest_row][dest_column]
+
+        if piece_at_destination and piece_at_destination.get_color() == self._color:
             return False
 
         return True
@@ -36,6 +45,17 @@ class Piece:
 class Advisor(Piece):
     """
     """
+    BOUNDARIES = {
+        'red': {
+            'row_high': 3,
+            'row_low': 1
+        },
+        'black': {
+            'row_high': 10,
+            'row_low': 8
+        }
+    }
+
     def __init__(self, color, start_column, start_row):
         """
         """
@@ -51,7 +71,10 @@ class Advisor(Piece):
         if not precheck_valid:
             return False
 
-        #TODO add further move logic
+        if dest_column > 'f' or dest_column < 'd':
+            return False
+
+        return True
 
 class Cannon(Piece):
     """

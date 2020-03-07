@@ -8,18 +8,18 @@ class XiangqiGame:
     """
     """
     BLANK_BOARD = {
-            # a    b    c    d    e    f    g    h    i
-        10: ["-", "-", "-", "-", "-", "-", "-", "-", "-"],
-        9:  ["-", "-", "-", "-", "-", "-", "-", "-", "-"],
-        8:  ["-", "-", "-", "-", "-", "-", "-", "-", "-"],
-        7:  ["-", "-", "-", "-", "-", "-", "-", "-", "-"],
-        6:  ["-", "-", "-", "-", "-", "-", "-", "-", "-"],
-        # RIVER #########################################
-        5:  ["-", "-", "-", "-", "-", "-", "-", "-", "-"],
-        4:  ["-", "-", "-", "-", "-", "-", "-", "-", "-"],
-        3:  ["-", "-", "-", "-", "-", "-", "-", "-", "-"],
-        2:  ["-", "-", "-", "-", "-", "-", "-", "-", "-"],
-        1:  ["-", "-", "-", "-", "-", "-", "-", "-", "-"]
+            # a     b     c     d     e     f     g     h     i
+        10: { 'a': None, 'b': None, 'c': None, 'd': None, 'e': None, 'f': None, 'g': None, 'h': None, 'i': None},
+         9: { 'a': None, 'b': None, 'c': None, 'd': None, 'e': None, 'f': None, 'g': None, 'h': None, 'i': None},
+         8: { 'a': None, 'b': None, 'c': None, 'd': None, 'e': None, 'f': None, 'g': None, 'h': None, 'i': None},
+         7: { 'a': None, 'b': None, 'c': None, 'd': None, 'e': None, 'f': None, 'g': None, 'h': None, 'i': None},
+         6: { 'a': None, 'b': None, 'c': None, 'd': None, 'e': None, 'f': None, 'g': None, 'h': None, 'i': None},
+         # RIVER ###############################################################################################
+         5: { 'a': None, 'b': None, 'c': None, 'd': None, 'e': None, 'f': None, 'g': None, 'h': None, 'i': None},
+         4: { 'a': None, 'b': None, 'c': None, 'd': None, 'e': None, 'f': None, 'g': None, 'h': None, 'i': None},
+         3: { 'a': None, 'b': None, 'c': None, 'd': None, 'e': None, 'f': None, 'g': None, 'h': None, 'i': None},
+         2: { 'a': None, 'b': None, 'c': None, 'd': None, 'e': None, 'f': None, 'g': None, 'h': None, 'i': None},
+         1: { 'a': None, 'b': None, 'c': None, 'd': None, 'e': None, 'f': None, 'g': None, 'h': None, 'i': None},
     }
 
     def __init__(self):
