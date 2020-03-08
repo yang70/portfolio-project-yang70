@@ -2,24 +2,64 @@
 # Date: 03/01/2020
 # Description:
 
+import copy
 from pieces import Piece, Advisor, Cannon, Chariot, Elephant, General, Horse, Soldier
 
 class XiangqiGame:
     """
     """
     BLANK_BOARD = {
-            # a     b     c     d     e     f     g     h     i
-        10: { 'a': None, 'b': None, 'c': None, 'd': None, 'e': None, 'f': None, 'g': None, 'h': None, 'i': None},
-         9: { 'a': None, 'b': None, 'c': None, 'd': None, 'e': None, 'f': None, 'g': None, 'h': None, 'i': None},
-         8: { 'a': None, 'b': None, 'c': None, 'd': None, 'e': None, 'f': None, 'g': None, 'h': None, 'i': None},
-         7: { 'a': None, 'b': None, 'c': None, 'd': None, 'e': None, 'f': None, 'g': None, 'h': None, 'i': None},
-         6: { 'a': None, 'b': None, 'c': None, 'd': None, 'e': None, 'f': None, 'g': None, 'h': None, 'i': None},
-         # RIVER ###############################################################################################
-         5: { 'a': None, 'b': None, 'c': None, 'd': None, 'e': None, 'f': None, 'g': None, 'h': None, 'i': None},
-         4: { 'a': None, 'b': None, 'c': None, 'd': None, 'e': None, 'f': None, 'g': None, 'h': None, 'i': None},
-         3: { 'a': None, 'b': None, 'c': None, 'd': None, 'e': None, 'f': None, 'g': None, 'h': None, 'i': None},
-         2: { 'a': None, 'b': None, 'c': None, 'd': None, 'e': None, 'f': None, 'g': None, 'h': None, 'i': None},
+
          1: { 'a': None, 'b': None, 'c': None, 'd': None, 'e': None, 'f': None, 'g': None, 'h': None, 'i': None},
+         2: { 'a': None, 'b': None, 'c': None, 'd': None, 'e': None, 'f': None, 'g': None, 'h': None, 'i': None},
+         3: { 'a': None, 'b': None, 'c': None, 'd': None, 'e': None, 'f': None, 'g': None, 'h': None, 'i': None},
+         4: { 'a': None, 'b': None, 'c': None, 'd': None, 'e': None, 'f': None, 'g': None, 'h': None, 'i': None},
+         5: { 'a': None, 'b': None, 'c': None, 'd': None, 'e': None, 'f': None, 'g': None, 'h': None, 'i': None},
+         # RIVER ###############################################################################################
+         6: { 'a': None, 'b': None, 'c': None, 'd': None, 'e': None, 'f': None, 'g': None, 'h': None, 'i': None},
+         7: { 'a': None, 'b': None, 'c': None, 'd': None, 'e': None, 'f': None, 'g': None, 'h': None, 'i': None},
+         8: { 'a': None, 'b': None, 'c': None, 'd': None, 'e': None, 'f': None, 'g': None, 'h': None, 'i': None},
+         9: { 'a': None, 'b': None, 'c': None, 'd': None, 'e': None, 'f': None, 'g': None, 'h': None, 'i': None},
+        10: { 'a': None, 'b': None, 'c': None, 'd': None, 'e': None, 'f': None, 'g': None, 'h': None, 'i': None},
+    }
+
+    STARTING_COORDINATES = {
+        'red': {
+            'G': ('e', 1),
+            'A1': ('d', 1),
+            'A2': ('f', 1),
+            'E1': ('c', 1),
+            'E2': ('g', 1),
+            'H1': ('b', 1),
+            'H2': ('h', 1),
+            'R1': ('a', 1),
+            'R2': ('i', 1),
+            'C1': ('b', 3),
+            'C2': ('h', 3),
+            'S1': ('a', 4),
+            'S2': ('c', 4),
+            'S3': ('e', 4),
+            'S4': ('g', 4),
+            'S5': ('i', 4),
+        },
+        'black': {
+            'G': ('e', 10),
+            'A1': ('d', 10),
+            'A2': ('f', 10),
+            'E1': ('c', 10),
+            'E2': ('g', 10),
+            'H1': ('b', 10),
+            'H2': ('h', 10),
+            'R1': ('a', 10),
+            'R2': ('i', 10),
+            'C1': ('b', 8),
+            'C2': ('h', 8),
+            'S1': ('a', 7),
+            'S2': ('c', 7),
+            'S3': ('e', 7),
+            'S4': ('g', 7),
+            'S5': ('i', 7),
+        }
     }
 
     def __init__(self):
@@ -29,7 +69,7 @@ class XiangqiGame:
         self._current_turn = "red"
         self._red_pieces   = self.initialize_pieces("red")
         self._black_pieces = self.initialize_pieces("black")
-        self._board        = self.initialize_board(self._red_pieces, self._black_pieces)
+        self._board        = self.initialize_board()
 
     def get_game_state(self):
         """
@@ -57,10 +97,48 @@ class XiangqiGame:
         """
         """
 
-    def initialize_board(self, red_pieces, black_pieces):
+    def print_red(text):
         """
         """
+        print("\033[91m {}\033[00m" .format(text))
 
+    def print_black(text):
+        """
+        """
+        print("\033[98m {}\033[00m" .format(text))
+
+    def print_board(self):
+        """
+        """
+        print('   a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i')
+        row_counter = 0
+        for row_num, row in self._board.items():
+            if row_num == 10:
+                current_row = str(row_num)
+            else:
+                current_row = ' ' + str(row_num)
+
+            for column in range(97,106):
+                piece = row[chr(column)] or '-'
+                current_row += ' ' + str(piece)
+
+            print(current_row)
+
+    def initialize_board(self):
+        """
+        """
+        board = copy.deepcopy(self.BLANK_BOARD)
+        for key, piece in self._red_pieces.items():
+            coords = self.STARTING_COORDINATES['red'][key]
+            piece.set_coordinates(*coords)
+            board[coords[1]][coords[0]] = piece
+
+        for key, piece in self._black_pieces.items():
+            coords = self.STARTING_COORDINATES['black'][key]
+            piece.set_coordinates(*coords)
+            board[coords[1]][coords[0]] = piece
+
+        return board
 
     def initialize_pieces(self, color):
         """

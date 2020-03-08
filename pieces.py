@@ -42,6 +42,12 @@ class Piece:
 
         return True
 
+    def set_coordinates(self, column, row):
+        """
+        """
+        self._column = column
+        self._row    = row
+
 class Advisor(Piece):
     """
     """
@@ -74,7 +80,18 @@ class Advisor(Piece):
         if dest_column > 'f' or dest_column < 'd':
             return False
 
+        if dest_row > self.BOUNDARIES[self._color]['row_high'] or dest_row < self.BOUNDARIES[self._color]['row_low']:
+            return False
+
+        if abs(dest_row - self._row) != 1 or abs(ord(dest_column) - ord(self._column)) != 1:
+            return False
+
         return True
+
+    def __str__(self):
+        """
+        """
+        return "A"
 
 class Cannon(Piece):
     """
@@ -96,6 +113,11 @@ class Cannon(Piece):
 
         #TODO add further move logic
 
+    def __str__(self):
+        """
+        """
+        return "C"
+
 class Chariot(Piece):
     """
     """
@@ -115,6 +137,11 @@ class Chariot(Piece):
             return False
 
         #TODO add further move logic
+
+    def __str__(self):
+        """
+        """
+        return "R"
 
 class Elephant(Piece):
     """
@@ -136,6 +163,11 @@ class Elephant(Piece):
 
         #TODO add further move logic
 
+    def __str__(self):
+        """
+        """
+        return "E"
+
 class General(Piece):
     """
     """
@@ -155,6 +187,11 @@ class General(Piece):
             return False
 
         #TODO add further move logic
+
+    def __str__(self):
+        """
+        """
+        return "G"
 
 class Horse(Piece):
     """
@@ -176,6 +213,11 @@ class Horse(Piece):
 
         #TODO add further move logic
 
+    def __str__(self):
+        """
+        """
+        return "H"
+
 class Soldier(Piece):
     """
     """
@@ -195,3 +237,8 @@ class Soldier(Piece):
             return False
 
         #TODO add further move logic
+
+    def __str__(self):
+        """
+        """
+        return "S"

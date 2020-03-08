@@ -59,6 +59,19 @@ class PieceTester(unittest.TestCase):
             self.piece.valid_move(self.valid_end_column, self.valid_end_row, self.board)
         )
 
+    def test_set_coordinates(self):
+        self.piece.set_coordinates('b', 1)
+
+        self.assertEqual(
+            self.piece._column,
+            'b'
+        )
+
+        self.assertEqual(
+            self.piece._row,
+            1
+        )
+
 class AdvisorTester(PieceTester):
     def setUp(self):
         self.board = copy.deepcopy( XiangqiGame.BLANK_BOARD )
@@ -84,6 +97,43 @@ class AdvisorTester(PieceTester):
         self.assertFalse(
             self.piece.valid_move('g', 2, self.board)
         )
+
+    def test_invalid_row_low_red(self):
+        self.assertFalse(
+            self.piece.valid_move('d', 0, self.board)
+        )
+
+    def test_invalid_row_high_red(self):
+        piece = self.klass('red', 'd', 3)
+
+        self.assertFalse(
+            piece.valid_move('d', 4, self.board)
+        )
+
+    def test_invalid_row_low_black(self):
+        piece = self.klass('black', 'd', 8)
+
+        self.assertFalse(
+            piece.valid_move('d', 7, self.board)
+        )
+
+    def test_invalid_row_high_black(self):
+        piece = self.klass('black', 'd', 8)
+
+        self.assertFalse(
+            piece.valid_move('d', 11, self.board)
+        )
+
+    def test_invalid_non_diagonal(self):
+        self.assertFalse(
+            self.piece.valid_move('d', 2, self.board)
+        )
+
+    def test_valid_move(self):
+        self.assertTrue(
+            self.piece.valid_move('e', 2, self.board)
+        )
+
 
 
 # class CannonTester(PieceTester):
