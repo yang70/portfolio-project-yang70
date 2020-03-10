@@ -23,6 +23,15 @@ class XiangqiGame:
         10: { 'a': None, 'b': None, 'c': None, 'd': None, 'e': None, 'f': None, 'g': None, 'h': None, 'i': None},
     }
 
+    # Piece Abbreviations #
+    #######################
+    # A -> Advisor
+    # C -> Cannon
+    # R -> Chariot
+    # E -> Elephant
+    # G -> General
+    # H -> Horse
+    # S -> Soldier
     STARTING_COORDINATES = {
         'red': {
             'G': ('e', 1),
@@ -143,15 +152,6 @@ class XiangqiGame:
     def initialize_pieces(self, color):
         """
         """
-        # Piece Abbreviations #
-        #######################
-        # A -> Advisor
-        # C -> Cannon
-        # R -> Chariot
-        # E -> Elephant
-        # G -> General
-        # H -> Horse
-        # S -> Soldier
         return {
             'G': General(color, None, None),
             'A1': Advisor(color, None, None),

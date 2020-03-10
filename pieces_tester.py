@@ -48,7 +48,7 @@ class PieceTester(unittest.TestCase):
 
     def test_invalid_move_to_current_position(self):
         self.assertFalse(
-            self.piece.valid_move('a', 1, self.board)
+            self.piece.valid_move(self.valid_start_column, self.valid_start_row, self.board)
         )
 
     def test_invalid_move_to_position_with_same_color(self):
@@ -136,25 +136,251 @@ class AdvisorTester(PieceTester):
 
 
 
-# class CannonTester(PieceTester):
-#     def setUp(self):
-#         self.board = copy.deepcopy( XiangqiGame.BLANK_BOARD )
-#         self.klass = Cannon
+class CannonTester(PieceTester):
+    def setUp(self):
+        self.board = copy.deepcopy( XiangqiGame.BLANK_BOARD )
+        self.klass = Cannon
+        self.valid_start_row    = 3
+        self.valid_start_column = 'b'
+        self.valid_end_row      = 3
+        self.valid_end_column   = 'g'
 
-# class ChariotTester(PieceTester):
-#     def setUp(self):
-#         self.board = copy.deepcopy( XiangqiGame.BLANK_BOARD )
-#         self.klass = Chariot
+        self.piece = self.klass('red', self.valid_start_column, self.valid_start_row)
 
-# class ElephantTester(PieceTester):
-#     def setUp(self):
-#         self.board = copy.deepcopy( XiangqiGame.BLANK_BOARD )
-#         self.klass = Elephant
+    def test_valid_move_empty_row(self):
+        self.assertTrue(
+            self.piece.valid_move('e', 3, self.board)
+        )
 
-# class GeneralTester(PieceTester):
-#     def setUp(self):
-#         self.board = copy.deepcopy( XiangqiGame.BLANK_BOARD )
-#         self.klass = General
+    def test_valid_move_empty_column(self):
+        self.assertTrue(
+            self.piece.valid_move('h', 3, self.board)
+        )
+
+    def test_invalid_move_row_not_empty(self):
+        self.board[3]['c'] = Piece('red', 'c', 3)
+
+        self.assertFalse(
+            self.piece.valid_move('d', 3, self.board)
+        )
+
+    def test_invalid_move_row_not_empty_2(self):
+        self.board[3]['c'] = Piece('red', 'c', 3)
+        self.board[3]['d'] = Piece('red', 'd', 3)
+        self.board[3]['e'] = Piece('black', 'e', 3)
+
+        self.assertFalse(
+            self.piece.valid_move('e', 3, self.board)
+        )
+
+    def test_valid_move_row_not_empty(self):
+        self.board[3]['c'] = Piece('red', 'c', 3)
+        self.board[3]['d'] = Piece('black', 'd', 3)
+
+        self.assertTrue(
+            self.piece.valid_move('d', 3, self.board)
+        )
+
+    def test_invalid_move_column_not_empty(self):
+        self.board[4]['b'] = Piece('red', 'b', 4)
+
+        self.assertFalse(
+            self.piece.valid_move('b', 5, self.board)
+        )
+
+    def test_invalid_move_column_not_empty_2(self):
+        self.board[4]['b'] = Piece('red', 'b', 4)
+        self.board[5]['b'] = Piece('red', 'b', 5)
+        self.board[6]['b'] = Piece('black', 'b', 6)
+
+        self.assertFalse(
+            self.piece.valid_move('b', 6, self.board)
+        )
+
+    def test_valid_move_column_not_empty(self):
+        self.board[4]['b'] = Piece('red', 'b', 4)
+        self.board[5]['b'] = Piece('black', 'b', 5)
+
+        self.assertTrue(
+            self.piece.valid_move('b', 5, self.board)
+        )
+
+    def test_invalid_diagonal_move(self):
+        self.assertFalse(
+            self.piece.valid_move('c', 4, self.board)
+        )
+
+class ChariotTester(PieceTester):
+    def setUp(self):
+        self.board = copy.deepcopy( XiangqiGame.BLANK_BOARD )
+        self.klass = Chariot
+        self.valid_start_row    = 1
+        self.valid_start_column = 'a'
+        self.valid_end_row      = 3
+        self.valid_end_column   = 'a'
+
+        self.piece = self.klass('red', self.valid_start_column, self.valid_start_row)
+
+    def test_valid_move_empty_row(self):
+        self.assertTrue(
+            self.piece.valid_move('c', 1, self.board)
+        )
+
+    def test_valid_move_empty_column(self):
+        self.assertTrue(
+            self.piece.valid_move('a', 5, self.board)
+        )
+
+    def test_invalid_move_row_not_empty(self):
+        self.board[1]['b'] = Piece('red', 'b', 1)
+
+        self.assertFalse(
+            self.piece.valid_move('d', 1, self.board)
+        )
+
+    def test_invalid_move_column_not_empty(self):
+        self.board[2]['a'] = Piece('red', 'a', 2)
+
+        self.assertFalse(
+            self.piece.valid_move('a', 3, self.board)
+        )
+
+    def test_invalid_diagonal_move(self):
+        self.assertFalse(
+            self.piece.valid_move('b', 2, self.board)
+        )
+
+class ElephantTester(PieceTester):
+    def setUp(self):
+        self.board = copy.deepcopy( XiangqiGame.BLANK_BOARD )
+        self.klass = Elephant
+        self.valid_start_row    = 1
+        self.valid_start_column = 'c'
+        self.valid_end_row      = 3
+        self.valid_end_column   = 'a'
+
+        self.piece = self.klass('red', self.valid_start_column, self.valid_start_row)
+
+    def test_invalid_move_too_short(self):
+        self.assertFalse(
+            self.piece.valid_move('b', 2, self.board)
+        )
+
+    def test_invalid_move_too_long(self):
+        self.assertFalse(
+            self.piece.valid_move('f', 4, self.board)
+        )
+
+    def test_invalid_move_straight(self):
+        self.assertFalse(
+            self.piece.valid_move('c', 3, self.board)
+        )
+
+    def test_invalid_move_piece_in_the_way_1(self):
+        self.board[2]['b'] = Piece('red', 'b', 2)
+
+        self.assertFalse(
+            self.piece.valid_move('a', 3, self.board)
+        )
+
+    def test_invalid_move_piece_in_the_way_2(self):
+        self.board[2]['d'] = Piece('red', 'd', 2)
+
+        self.assertFalse(
+            self.piece.valid_move('e', 3, self.board)
+        )
+
+    def test_invalid_move_piece_in_the_way_3(self):
+        piece              = self.klass('black', 'c', 10)
+        self.board[9]['d'] = Piece('black', 'd', 9)
+
+        self.assertFalse(
+            piece.valid_move('e', 8, self.board)
+        )
+
+    def test_invalid_move_piece_in_the_way_4(self):
+        piece              = self.klass('black', 'c', 10)
+        self.board[9]['b'] = Piece('black', 'b', 9)
+
+        self.assertFalse(
+            piece.valid_move('a', 8, self.board)
+        )
+
+    def test_invalid_move_across_river_red(self):
+        self.piece.set_coordinates('c', 5)
+
+        self.assertFalse(
+            self.piece.valid_move('a', 7, self.board)
+        )
+
+    def test_invalid_move_across_river_black(self):
+        piece = self.klass('black', 'c', 6)
+
+        self.assertFalse(
+            self.piece.valid_move('a', 4, self.board)
+        )
+
+    def test_valid_move_black(self):
+        piece = self.klass('black', 'c', 10)
+
+        self.assertTrue(
+            piece.valid_move('e', 8, self.board)
+        )
+
+class GeneralTester(PieceTester):
+    def setUp(self):
+        self.board = copy.deepcopy( XiangqiGame.BLANK_BOARD )
+        self.klass = General
+        self.valid_start_row    = 1
+        self.valid_start_column = 'e'
+        self.valid_end_row      = 2
+        self.valid_end_column   = 'e'
+
+        self.piece = self.klass('red', self.valid_start_column, self.valid_start_row)
+
+    def test_invalid_move_diagonal(self):
+        self.assertFalse(
+            self.piece.valid_move('d', 2, self.board)
+        )
+
+    def test_invalid_move_straight_more_than_one(self):
+        self.assertFalse(
+            self.piece.valid_move('e', 3, self.board)
+        )
+
+    def test_invalid_move_to_see_other_general_red(self):
+        self.board[10]['d'] = self.klass('black', 'd', 9)
+
+        self.assertFalse(
+            self.piece.valid_move('d', 1, self.board)
+        )
+
+    def test_valid_move_to_see_other_general_red(self):
+        self.board[10]['d'] = self.klass('black', 'd', 9)
+        self.board[9]['d']  = Piece('black', 'd', 9)
+
+        self.assertTrue(
+            self.piece.valid_move('d', 1, self.board)
+        )
+
+    def test_invalid_move_to_see_other_general_black(self):
+        self.piece.set_coordinates('f', 2)
+        self.board[2]['f'] = self.piece
+        black_general      = self.klass('black', 'e', 10)
+
+        self.assertFalse(
+            black_general.valid_move('f', 10, self.board)
+        )
+
+    def test_valid_move_to_see_other_general_black(self):
+        self.piece.set_coordinates('f', 2)
+        self.board[2]['f'] = self.piece
+        self.board[3]['f'] = Piece('red', 'f', 3)
+        black_general      = self.klass('black', 'e', 10)
+
+        self.assertTrue(
+            black_general.valid_move('f', 10, self.board)
+        )
 
 # class HorseTester(PieceTester):
 #     def setUp(self):
