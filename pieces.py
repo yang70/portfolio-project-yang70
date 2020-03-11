@@ -4,9 +4,10 @@ class Piece:
     def __init__(self, color, start_column, start_row):
         """
         """
-        self._color  = color
-        self._column = start_column
-        self._row    = start_row
+        self._color   = color
+        self._column  = start_column
+        self._row     = start_row
+        self._in_play = True
 
     def __eq__(self, other):
         """
@@ -42,11 +43,26 @@ class Piece:
 
         return True
 
+    def get_coordinates(self):
+        """
+        """
+        return (self._column, self._row)
+
     def set_coordinates(self, column, row):
         """
         """
         self._column = column
         self._row    = row
+
+    def is_in_play(self):
+        """
+        """
+        return self._in_play
+
+    def capture(self):
+        """
+        """
+        self._in_play = False
 
 class Advisor(Piece):
     """
@@ -372,7 +388,43 @@ class Horse(Piece):
         if not precheck_valid:
             return False
 
-        #TODO add further move logic
+        # Given the row and column difference, check and see if they are found, which will return
+        # the spot at the board to check if there is a blocking piece.  If there is a combination
+        # not present it means the move is not valid.
+        valid_move_dict = {
+            1: {
+                2: (self._row, chr(ord(self._column) - 1)),
+                -2: (self._row, chr(ord(self._column) + 1))
+            },
+            -1: {
+                2: (self._row, chr(ord(self._column) - 1)),
+                -2: (self._row, chr(ord(self._column) + 1))
+            },
+            2: {
+                1: (self._row - 1, self._column),
+                -1: (self._row - 1, self._column)
+            },
+            -2: {
+                1: (self._row + 1, self._column),
+                -1: (self._row + 1, self._column)
+            }
+        }
+
+        row_difference = self._row - dest_row
+        column_difference = ord(self._column) - ord(dest_column)
+
+        try:
+            coords_to_check = valid_move_dict[row_difference][column_difference]
+
+            # Return false if a piece was found at the coordinates as it is blocking
+            if board[coords_to_check[0]][coords_to_check[1]]:
+                return False
+
+        # If a KeyError is raised it was an invalid move, return False
+        except KeyError:
+            return False
+
+        return True
 
     def __str__(self):
         """
@@ -397,7 +449,29 @@ class Soldier(Piece):
         if not precheck_valid:
             return False
 
-        #TODO add further move logic
+        # If the destination is more than 1 space away in any direction it is invalid
+        if abs(self._row - dest_row) > 1 or abs(ord(self._column) - ord(dest_column)) > 1:
+            return False
+
+        if self._color == "red":
+            # Check moving backwards
+            if dest_row < self._row:
+                return False
+
+            # Check if moving sideways before the river
+            if self._row <= 5 and ord(self._column) - ord(dest_column) != 0:
+                return False
+
+        else:
+            # Check moving backwards
+            if dest_row > self._row:
+                return False
+
+            # Check if moving sideways before the river
+            if self._row >= 6 and ord(self._column) - ord(dest_column) != 0:
+                return False
+
+        return True
 
     def __str__(self):
         """

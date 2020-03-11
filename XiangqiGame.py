@@ -71,6 +71,11 @@ class XiangqiGame:
         }
     }
 
+    OPPOSITE_COLOR_DICT = {
+        "red": "black",
+        "black": "red"
+    }
+
     def __init__(self):
         """
         """
@@ -101,10 +106,57 @@ class XiangqiGame:
     def is_in_check(self, color):
         """
         """
+        # Find the coordinates of the general of the given color
+        generals_coords = getattr(self, f"_{color}_pieces")["G"].get_coordinates()
+        # Get the opposing colors pieces
+        opposite_color  = self.OPPOSITE_COLOR_DICT[color]
+        opposing_pieces = getattr(self, f"_{opposite_color}_pieces")
+
+        # Iterate the opposing colors pieces and if the piece is still in play, check if
+        # the generals coordinates are a valid move for the given piece and return True if so.
+        for piece in opposing_pieces.values():
+            if piece.is_in_play():
+                if piece.valid_move(generals_coords[0], generals_coords[1], self._board):
+                    return True
+
+        return False
 
     def make_move(self, from_coord, to_coord):
         """
         """
+        if self._game_state != "UNFINISHED":
+            return False
+
+        from_coord    = convert_coord(from_coord)
+        to_coord      = convert_coord(to_coord)
+
+        piece = self._board[from_coord[1]][from_coord[0]]
+
+        if piece == None or piece.get_color() != self._current_turn:
+            return False
+
+        if not piece.valid_move(to_coord[1], to_coord[0], self._board):
+            return False
+
+        #TODO Does move expose General?
+
+        #TODO Does move put current turn in check?
+
+        #TODO Complete move and capture piece if necessary
+
+        #TODO Check if winner and update game state if so
+
+        #TODO Toggle turn
+
+        return True
+
+    def convert_coord(self, coord):
+        """
+        """
+        coord = list(coord)
+        coord[1] = int(coord[1])
+
+        return coord
 
     def print_red(text):
         """

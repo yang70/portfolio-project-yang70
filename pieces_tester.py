@@ -72,6 +72,40 @@ class PieceTester(unittest.TestCase):
             1
         )
 
+    def test_get_coordinates(self):
+        self.assertEqual(
+            self.piece.get_coordinates(),
+            (self.valid_start_column, self.valid_start_row)
+        )
+
+    def test_get_coordinates(self):
+        self.assertEqual(
+            self.piece.get_coordinates(),
+            (self.valid_start_column, self.valid_start_row)
+        )
+
+    def test_is_in_play(self):
+        self.assertTrue(
+            self.piece.is_in_play()
+        )
+
+        self.piece._in_play = False
+
+        self.assertFalse(
+            self.piece.is_in_play()
+        )
+
+    def test_capture(self):
+        self.assertTrue(
+            self.piece._in_play
+        )
+
+        self.piece.capture()
+
+        self.assertFalse(
+            self.piece._in_play
+        )
+
 class AdvisorTester(PieceTester):
     def setUp(self):
         self.board = copy.deepcopy( XiangqiGame.BLANK_BOARD )
@@ -382,15 +416,127 @@ class GeneralTester(PieceTester):
             black_general.valid_move('f', 10, self.board)
         )
 
-# class HorseTester(PieceTester):
-#     def setUp(self):
-#         self.board = copy.deepcopy( XiangqiGame.BLANK_BOARD )
-#         self.klass = Horse
+class HorseTester(PieceTester):
+    def setUp(self):
+        self.board = copy.deepcopy( XiangqiGame.BLANK_BOARD )
+        self.klass = Horse
+        self.valid_start_row    = 1
+        self.valid_start_column = 'b'
+        self.valid_end_row      = 3
+        self.valid_end_column   = 'a'
 
-# class SoldierTester(PieceTester):
-#     def setUp(self):
-#         self.board = copy.deepcopy( XiangqiGame.BLANK_BOARD )
-#         self.klass = Soldier
+        self.piece = self.klass('red', self.valid_start_column, self.valid_start_row)
+
+    def test_invalid_move_too_far(self):
+        self.assertFalse(
+            self.piece.valid_move('c', 4, self.board)
+        )
+
+    def test_invalid_move_down_left(self):
+        self.piece.set_coordinates('e', 7)
+        self.board[8]['e'] = Piece('red', 'e', 8)
+
+        self.assertFalse(
+            self.piece.valid_move('d', 9, self.board)
+        )
+
+    def test_invalid_move_down_right(self):
+        self.piece.set_coordinates('e', 7)
+        self.board[8]['e'] = Piece('red', 'e', 8)
+
+        self.assertFalse(
+            self.piece.valid_move('f', 9, self.board)
+        )
+
+    def test_invalid_move_up_left(self):
+        self.piece.set_coordinates('e', 7)
+        self.board[6]['e'] = Piece('red', 'e', 6)
+
+        self.assertFalse(
+            self.piece.valid_move('d', 5, self.board)
+        )
+
+    def test_invalid_move_up_right(self):
+        self.piece.set_coordinates('e', 7)
+        self.board[6]['e'] = Piece('red', 'e', 6)
+
+        self.assertFalse(
+            self.piece.valid_move('f', 5, self.board)
+        )
+
+    def test_invalid_move_left_up(self):
+        self.piece.set_coordinates('e', 7)
+        self.board[7]['d'] = Piece('red', 'd', 7)
+
+        self.assertFalse(
+            self.piece.valid_move('c', 6, self.board)
+        )
+
+    def test_invalid_move_left_down(self):
+        self.piece.set_coordinates('e', 7)
+        self.board[7]['d'] = Piece('red', 'd', 7)
+
+        self.assertFalse(
+            self.piece.valid_move('c', 8, self.board)
+        )
+
+    def test_invalid_move_right_up(self):
+        self.piece.set_coordinates('e', 7)
+        self.board[7]['f'] = Piece('red', 'f', 7)
+
+        self.assertFalse(
+            self.piece.valid_move('g', 6, self.board)
+        )
+
+    def test_invalid_move_right_down(self):
+        self.piece.set_coordinates('e', 7)
+        self.board[7]['f'] = Piece('red', 'f', 7)
+
+        self.assertFalse(
+            self.piece.valid_move('g', 8, self.board)
+        )
+
+class SoldierTester(PieceTester):
+    def setUp(self):
+        self.board = copy.deepcopy( XiangqiGame.BLANK_BOARD )
+        self.klass = Soldier
+        self.valid_start_row    = 4
+        self.valid_start_column = 'a'
+        self.valid_end_row      = 5
+        self.valid_end_column   = 'a'
+
+        self.piece = self.klass('red', self.valid_start_column, self.valid_start_row)
+
+    def test_invalid_move_too_far(self):
+        self.assertFalse(
+            self.piece.valid_move('a', 6, self.board)
+        )
+
+    def test_invalid_move_sideways_before_river_red(self):
+        self.assertFalse(
+            self.piece.valid_move('b', 4, self.board)
+        )
+
+    def test_valid_move_sideways_after_river_red(self):
+        self.piece.set_coordinates('a', 6)
+
+        self.assertTrue(
+            self.piece.valid_move('b', 6, self.board)
+        )
+
+    def test_invalid_move_sideways_before_river_black(self):
+        piece = self.klass('black', 'a', 7)
+
+        self.assertFalse(
+            piece.valid_move('b', 7, self.board)
+        )
+
+    def test_valid_move_sideways_after_river_black(self):
+        piece = self.klass('black', 'a', 5)
+
+        self.assertTrue(
+            piece.valid_move('b', 5, self.board)
+        )
 
 if __name__ == '__main__':
     unittest.main()
