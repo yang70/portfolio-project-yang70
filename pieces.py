@@ -123,10 +123,11 @@ class Advisor(Piece):
         if dest_column > 'f' or dest_column < 'd':
             return False
 
-        #
+        # Row boundaries of the palace
         if dest_row > self.BOUNDARIES[self._color]['row_high'] or dest_row < self.BOUNDARIES[self._color]['row_low']:
             return False
 
+        # Only moving one space in a diagonal fashion
         if abs(dest_row - self._row) != 1 or abs(ord(dest_column) - ord(self._column)) != 1:
             return False
 
@@ -140,6 +141,7 @@ class Advisor(Piece):
 
 class Cannon(Piece):
     """
+    Implements the cannon piece
     """
     def __init__(self, color, start_column, start_row):
         """
@@ -223,6 +225,7 @@ class Cannon(Piece):
 
 class Chariot(Piece):
     """
+    Implements the chariot piece
     """
     def __init__(self, color, start_column, start_row):
         """
@@ -291,6 +294,7 @@ class Chariot(Piece):
 
 class Elephant(Piece):
     """
+    Implements the elephant piece
     """
     def __init__(self, color, start_column, start_row):
         """
@@ -347,6 +351,7 @@ class Elephant(Piece):
 
 class General(Piece):
     """
+    Implements the general piece
     """
     def __init__(self, color, start_column, start_row):
         """
@@ -376,6 +381,8 @@ class General(Piece):
         if column_change_value > 1 or row_change_value > 1:
             return False
 
+        # Check to make sure move does not cause the two generals to be unblocked in the
+        # same row
         if self._color == "red":
             current_row = dest_row + 1
 
@@ -413,6 +420,7 @@ class General(Piece):
 
 class Horse(Piece):
     """
+    Implements the horse piece
     """
     def __init__(self, color, start_column, start_row):
         """
@@ -477,6 +485,7 @@ class Horse(Piece):
 
 class Soldier(Piece):
     """
+    Implements the soldier piece
     """
     def __init__(self, color, start_column, start_row):
         """

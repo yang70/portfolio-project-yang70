@@ -1,3 +1,7 @@
+# Author: Matthew Yang
+# Date: 03/01/2020
+# Description: Tests for the base and piece classes.
+
 import unittest, copy
 from pieces import Piece, Advisor, Cannon, Chariot, Elephant, General, Horse, Soldier
 from XiangqiGame import XiangqiGame
@@ -345,7 +349,7 @@ class ElephantTester(PieceTester):
         piece = self.klass('black', 'c', 6)
 
         self.assertFalse(
-            self.piece.valid_move('a', 4, self.board)
+            piece.valid_move('a', 4, self.board)
         )
 
     def test_valid_move_black(self):

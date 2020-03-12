@@ -1,3 +1,7 @@
+# Author: Matthew Yang
+# Date: 03/01/2020
+# Description: Tests for the XiangqiGame class.
+
 import unittest
 from XiangqiGame import XiangqiGame
 from pieces import Piece, Advisor, Cannon, Chariot, Elephant, General, Horse, Soldier

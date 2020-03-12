@@ -312,7 +312,6 @@ class XiangqiGame:
         Prints the current board
         """
         print('   a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i')
-        row_counter = 0
         for row_num, row in self._board.items():
             if row_num == 10:
                 current_row = str(row_num)
