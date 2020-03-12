@@ -1,8 +1,15 @@
+# Author: Matthew Yang
+# Date: 03/01/2020
+# Description: Pieces to be used by the XiangqiGame class.  Represents 7 different piece classes
+#              that all inherit from a base piece class for shared logic.
+
 class Piece:
     """
+    Base piece class containing common logic shared between all piece sub-classes
     """
     def __init__(self, color, start_column, start_row):
         """
+        Initialization method that takes a color string and starting position.
         """
         self._color   = color
         self._column  = start_column
@@ -11,31 +18,42 @@ class Piece:
 
     def __eq__(self, other):
         """
-        Overrides the default equality method for easier testing
+        Overrides the default equality method for easier testing if
+        the other being compared is a Piece class, otherwise supers
+        to the original implementation
         """
-        return (
-            self._color == other._color and
-            self._column == other._column and
-            self._row == other._row
-        )
+        if isinstance(other, Piece):
+            return (
+                self._color == other._color and
+                self._column == other._column and
+                self._row == other._row
+            )
+        else:
+            return super().__eq__(other)
 
     def get_color(self):
         """
+        Returns the pieces color
         """
         return self._color
 
     def valid_move(self, dest_column, dest_row, board):
         """
+        Checks the given coordinates for basic validity
         """
+        # Is the destination the current coordinate of the piece
         if dest_row == self._row and dest_column == self._column:
             return False
 
+        # Is the destination row out of bounds
         if dest_row > 10 or dest_row < 1:
             return False
 
+        # Is the destination column out of bounds
         if dest_column > 'i' or dest_column < 'a':
             return False
 
+        # Is there a piece at the destination and is it the same color as this piece
         piece_at_destination = board[dest_row][dest_column]
 
         if piece_at_destination and piece_at_destination.get_color() == self._color:
@@ -45,28 +63,34 @@ class Piece:
 
     def get_coordinates(self):
         """
+        Returns a coordinates dict of row and column
         """
-        return (self._column, self._row)
+        return { "row": self._row, "column": self._column }
 
     def set_coordinates(self, column, row):
         """
+        Sets the row and column to the given values
         """
         self._column = column
         self._row    = row
 
     def is_in_play(self):
         """
+        Returns true of false whether the current piece has been captured
         """
         return self._in_play
 
     def capture(self):
         """
+        Sets the pieces in play status to false
         """
         self._in_play = False
 
 class Advisor(Piece):
     """
+    Implements the advisor piece
     """
+    # Constant representing the boundary limits for movement
     BOUNDARIES = {
         'red': {
             'row_high': 3,
@@ -80,11 +104,13 @@ class Advisor(Piece):
 
     def __init__(self, color, start_column, start_row):
         """
+        Initialization method, calls up to parent class definition
         """
         super().__init__(color, start_column, start_row)
 
     def valid_move(self, dest_column, dest_row, board):
         """
+        Checks specific logic for the given piece after checking logic of parent class
         """
         # Check parent logic for move validity
         precheck_valid = super(Advisor, self).valid_move(dest_column, dest_row, board)
@@ -93,9 +119,11 @@ class Advisor(Piece):
         if not precheck_valid:
             return False
 
+        # Column boundaries of the palace
         if dest_column > 'f' or dest_column < 'd':
             return False
 
+        #
         if dest_row > self.BOUNDARIES[self._color]['row_high'] or dest_row < self.BOUNDARIES[self._color]['row_low']:
             return False
 
@@ -106,6 +134,7 @@ class Advisor(Piece):
 
     def __str__(self):
         """
+        Overrites the str method when printing the object
         """
         return "A"
 
@@ -114,11 +143,13 @@ class Cannon(Piece):
     """
     def __init__(self, color, start_column, start_row):
         """
+        Initialization method, calls up to parent class definition
         """
         super().__init__(color, start_column, start_row)
 
     def valid_move(self, dest_column, dest_row, board):
         """
+        Checks specific logic for the given piece after checking logic of parent class
         """
         # Check parent logic for move validity
         precheck_valid = super(Cannon, self).valid_move(dest_column, dest_row, board)
@@ -186,6 +217,7 @@ class Cannon(Piece):
 
     def __str__(self):
         """
+        Overrites the str method when printing the object
         """
         return "C"
 
@@ -194,11 +226,13 @@ class Chariot(Piece):
     """
     def __init__(self, color, start_column, start_row):
         """
+        Initialization method, calls up to parent class definition
         """
         super().__init__(color, start_column, start_row)
 
     def valid_move(self, dest_column, dest_row, board):
         """
+        Checks specific logic for the given piece after checking logic of parent class
         """
         # Check parent logic for move validity
         precheck_valid = super(Chariot, self).valid_move(dest_column, dest_row, board)
@@ -251,6 +285,7 @@ class Chariot(Piece):
 
     def __str__(self):
         """
+        Overrites the str method when printing the object
         """
         return "R"
 
@@ -259,11 +294,13 @@ class Elephant(Piece):
     """
     def __init__(self, color, start_column, start_row):
         """
+        Initialization method, calls up to parent class definition
         """
         super().__init__(color, start_column, start_row)
 
     def valid_move(self, dest_column, dest_row, board):
         """
+        Checks specific logic for the given piece after checking logic of parent class
         """
         # Check parent logic for move validity
         precheck_valid = super(Elephant, self).valid_move(dest_column, dest_row, board)
@@ -304,6 +341,7 @@ class Elephant(Piece):
 
     def __str__(self):
         """
+        Overrites the str method when printing the object
         """
         return "E"
 
@@ -312,11 +350,13 @@ class General(Piece):
     """
     def __init__(self, color, start_column, start_row):
         """
+        Initialization method, calls up to parent class definition
         """
         super().__init__(color, start_column, start_row)
 
     def valid_move(self, dest_column, dest_row, board):
         """
+        Checks specific logic for the given piece after checking logic of parent class
         """
         # Check parent logic for move validity
         precheck_valid = super(General, self).valid_move(dest_column, dest_row, board)
@@ -367,6 +407,7 @@ class General(Piece):
 
     def __str__(self):
         """
+        Overrites the str method when printing the object
         """
         return "G"
 
@@ -375,11 +416,13 @@ class Horse(Piece):
     """
     def __init__(self, color, start_column, start_row):
         """
+        Initialization method, calls up to parent class definition
         """
         super().__init__(color, start_column, start_row)
 
     def valid_move(self, dest_column, dest_row, board):
         """
+        Checks specific logic for the given piece after checking logic of parent class
         """
         # Check parent logic for move validity
         precheck_valid = super(Horse, self).valid_move(dest_column, dest_row, board)
@@ -428,6 +471,7 @@ class Horse(Piece):
 
     def __str__(self):
         """
+        Overrites the str method when printing the object
         """
         return "H"
 
@@ -436,11 +480,13 @@ class Soldier(Piece):
     """
     def __init__(self, color, start_column, start_row):
         """
+        Initialization method, calls up to parent class definition
         """
         super().__init__(color, start_column, start_row)
 
     def valid_move(self, dest_column, dest_row, board):
         """
+        Checks specific logic for the given piece after checking logic of parent class
         """
         # Check parent logic for move validity
         precheck_valid = super(Soldier, self).valid_move(dest_column, dest_row, board)
@@ -475,5 +521,6 @@ class Soldier(Piece):
 
     def __str__(self):
         """
+        Overrites the str method when printing the object
         """
         return "S"

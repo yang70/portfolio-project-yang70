@@ -75,13 +75,7 @@ class PieceTester(unittest.TestCase):
     def test_get_coordinates(self):
         self.assertEqual(
             self.piece.get_coordinates(),
-            (self.valid_start_column, self.valid_start_row)
-        )
-
-    def test_get_coordinates(self):
-        self.assertEqual(
-            self.piece.get_coordinates(),
-            (self.valid_start_column, self.valid_start_row)
+            { "row": self.valid_start_row, "column": self.valid_start_column }
         )
 
     def test_is_in_play(self):
