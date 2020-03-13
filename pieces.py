@@ -208,9 +208,14 @@ class Cannon(Piece):
 
                 current += 1
 
-        # Return false if there is a pice in between the destination but no
+        # Return false if there is a piece in between the destination but no
         # piece at the destination
         if piece_in_between and not piece_at_destination:
+            return False
+
+        # Return false if there is not a piece in between but there is a piece
+        # at the destination
+        if not piece_in_between and piece_at_destination:
             return False
 
         # Returning true as if there is a piece at the destination it must be

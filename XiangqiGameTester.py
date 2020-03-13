@@ -217,6 +217,86 @@ class XiangqiGameTester(unittest.TestCase):
             "BLACK_WON"
         )
 
+    def test_red_win_checkmate_1(self):
+        self.game._board = copy.deepcopy( XiangqiGame.BLANK_BOARD )
+        red_general = General('red', 'e', 1)
+        red_soldier = Soldier('red', 'd', 6)
+
+        black_horse   = Horse('black', 'd', 9)
+        black_general = General('black', 'd', 8)
+
+        self.game._board[1]['e'] = red_general
+        self.game._board[6]['d'] = red_soldier
+        self.game._board[9]['d'] = black_horse
+        self.game._board[8]['d'] = black_general
+
+        self.game._red_pieces = {
+            'G': red_general,
+            'S1': red_soldier
+        }
+
+        self.game._black_pieces = {
+            'G': black_general,
+            'H1': black_horse
+        }
+
+        self.game._current_turn = "red"
+
+        self.assertFalse(
+            self.game.is_in_check('black')
+        )
+
+        self.game.make_move('d6', 'd7')
+
+        self.assertTrue(
+            self.game.is_in_check('black')
+        )
+
+        self.assertEqual(
+            self.game.get_game_state(),
+            "RED_WON"
+        )
+
+    def test_red_win_checkmate_2(self):
+        self.game._board = copy.deepcopy( XiangqiGame.BLANK_BOARD )
+        red_general = General('red', 'e', 1)
+        red_advisor = Advisor('red', 'e', 2)
+        red_cannon  = Cannon('red', 'd', 2)
+
+        black_general = General('black', 'd', 9)
+
+        self.game._board[1]['e'] = red_general
+        self.game._board[2]['e'] = red_advisor
+        self.game._board[2]['d'] = red_cannon
+        self.game._board[9]['d'] = black_general
+
+        self.game._red_pieces = {
+            'G': red_general,
+            'A1': red_advisor,
+            'C1': red_cannon
+        }
+
+        self.game._black_pieces = {
+            'G': black_general
+        }
+
+        self.game._current_turn = "red"
+
+        self.assertFalse(
+            self.game.is_in_check('black')
+        )
+
+        self.game.make_move('e2', 'd3')
+
+        self.assertTrue(
+            self.game.is_in_check('black')
+        )
+
+        self.assertEqual(
+            self.game.get_game_state(),
+            "RED_WON"
+        )
+
     def test_convert_coord(self):
         self.assertEqual(
             self.game.convert_coord('a10'),
