@@ -370,6 +370,10 @@ class General(Piece):
         if not precheck_valid:
             return False
 
+        # Return false if dest column is outside of palace
+        if dest_column < 'd' or dest_column > 'f':
+            return False
+
         column_change_value = abs(ord(dest_column) - ord(self._column))
         row_change_value    = abs(dest_row - self._row)
 
@@ -381,9 +385,12 @@ class General(Piece):
         if column_change_value > 1 or row_change_value > 1:
             return False
 
-        # Check to make sure move does not cause the two generals to be unblocked in the
-        # same row
+        # Check to make sure move does not go to a row outside of palace. Also check if the move
+        # will cause the two generals to be unblocked in the same row
         if self._color == "red":
+            if dest_row > 3:
+                return False
+
             current_row = dest_row + 1
 
             while current_row < 11:
@@ -397,6 +404,9 @@ class General(Piece):
 
                 current_row += 1
         else:
+            if dest_row < 8:
+                return False
+
             current_row = dest_row - 1
 
             while current_row > 0:
@@ -506,6 +516,10 @@ class Soldier(Piece):
 
         # If the destination is more than 1 space away in any direction it is invalid
         if abs(self._row - dest_row) > 1 or abs(ord(self._column) - ord(dest_column)) > 1:
+            return False
+
+        # Return false if moving diagonally
+        if abs(ord(dest_column) - ord(self._column)) > 0 and abs(dest_row - self._row) > 0:
             return False
 
         if self._color == "red":

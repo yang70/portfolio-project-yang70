@@ -240,26 +240,28 @@ class XiangqiGame:
         This method takes from and to coordinates (as dicts) and checks if the given
         move puts the current player in a 'check' situation
         """
-        # Backup the actual board so it can be restored after the check and create a copy
-        board_backup = self._board
-        board_copy   = copy.deepcopy( self._board )
+        from_row    = from_coord_dict['row']
+        from_column = from_coord_dict['column']
+        to_row      = to_coord_dict['row']
+        to_column   = to_coord_dict['column']
 
-        # Complete the move in the copy of the board and set the copy to the current
-        # games board.
-        piece_to_move = board_copy[from_coord_dict['row']][from_coord_dict['column']]
-        board_copy[from_coord_dict['row']][from_coord_dict['column']] = None
+        # Completes the move and checks to see if the player is in check
+        piece_to_move = self._board[from_row][from_column]
+        self._board[from_row][from_column] = None
 
-        captured_piece = board_copy[to_coord_dict['row']][to_coord_dict['column']]
-        board_copy[to_coord_dict['row']][to_coord_dict['column']] = piece_to_move
+        captured_piece = self._board[to_row][to_column]
+        self._board[to_row][to_column] = piece_to_move
 
-        self._board = board_copy
+        piece_to_move.set_coordinates(to_column, to_row)
 
         # Checks if current state of the board would be a check for the current player. Sends
         # either a potentially captured piece or None to be ignored when checking
         result = self.is_in_check(self._current_turn, captured_piece)
 
-        # Restore the board to the current state
-        self._board = board_backup
+        # Restores changes
+        piece_to_move.set_coordinates(from_column, from_row)
+        self._board[from_row][from_column] = piece_to_move
+        self._board[to_row][to_column] = captured_piece
 
         return result
 

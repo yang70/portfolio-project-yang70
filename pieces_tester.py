@@ -414,6 +414,46 @@ class GeneralTester(PieceTester):
             black_general.valid_move('f', 10, self.board)
         )
 
+    def test_invalid_move_row_red(self):
+        self.piece.set_coordinates('d', 3)
+
+        self.assertFalse(
+            self.piece.valid_move('d', 4, self.board)
+        )
+
+    def test_invalid_move_column_red(self):
+        self.piece.set_coordinates('d', 3)
+
+        self.assertFalse(
+            self.piece.valid_move('c', 3, self.board)
+        )
+
+        self.piece.set_coordinates('f', 3)
+
+        self.assertFalse(
+            self.piece.valid_move('g', 3, self.board)
+        )
+
+    def test_invalid_move_row_black(self):
+        piece = self.klass('black', 'd', 8)
+
+        self.assertFalse(
+            piece.valid_move('d', 7, self.board)
+        )
+
+    def test_invalid_move_column_black(self):
+        piece = self.klass('black', 'd', 8)
+
+        self.assertFalse(
+            piece.valid_move('c', 8, self.board)
+        )
+
+        piece.set_coordinates('f', 8)
+
+        self.assertFalse(
+            piece.valid_move('g', 8, self.board)
+        )
+
 class HorseTester(PieceTester):
     def setUp(self):
         self.board = copy.deepcopy( XiangqiGame.BLANK_BOARD )
@@ -508,6 +548,18 @@ class SoldierTester(PieceTester):
     def test_invalid_move_too_far(self):
         self.assertFalse(
             self.piece.valid_move('a', 6, self.board)
+        )
+
+    def test_invalid_move_diagonal(self):
+        self.piece.set_coordinates('d', 2)
+        self.assertFalse(
+            self.piece.valid_move('e', 1, self.board)
+        )
+
+    def test_invalid_move_diagonal_after_river(self):
+        self.piece.set_coordinates('d', 7)
+        self.assertFalse(
+            self.piece.valid_move('e', 8, self.board)
         )
 
     def test_invalid_move_sideways_before_river_red(self):
